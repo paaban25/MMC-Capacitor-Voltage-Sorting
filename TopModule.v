@@ -113,6 +113,9 @@ endmodule
 
 //A better way
 
+
+
+
 module TopModule(
   input [31:0] V1,
   input [31:0] V2,
@@ -128,6 +131,7 @@ module TopModule(
   input [31:0] V12,
   input [31:0] I,
   output [12:1] M
+  input [2:0] n
 );
   
   reg [31:0] voltage [1:12]; // Declaration of 2D array to store voltages
@@ -147,9 +151,9 @@ module TopModule(
     voltage[12] = V12;
   end
   
-  reg [1:6] C_Upper [1:6];
+  wire [6:1] C_Upper [1:6];
   
-  reg [7:12] C_lower [7:12];
+  wire [12:7] C_Lower [7:12];
   
   genvar i;
   generate for(i=2;i<7;i=i+1)
@@ -228,3 +232,4 @@ module TopModule(
   end
   
 endmodule
+
