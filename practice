@@ -1,0 +1,59 @@
+   LogicalORCombinations H1 (
+     .nums({C21, C31, C41, C51, C61}),  
+     .r(n) ,
+     .result(M_wire_ neg[1]));
+  
+  LogicalORCombinations H2 (
+    .nums({C12, C32, C42, C52, C62}),  
+     .r(n) ,
+    .result(M_wire_ neg[2])); 
+  
+  LogicalORCombinations H3 (
+    .nums({C13, C23, C43, C53, C63}),  
+     .r(n) ,
+    .result(M_wire_ neg[3]));
+  
+  LogicalORCombinations H4 (
+    .nums({C14, C24, C34, C54, C64}),  
+     .r(n) ,
+    .result(M_wire_ neg[4]));
+  
+  LogicalORCombinations H5 (
+    .nums({C15, C25, C35, C45, C65}),  
+     .r(n) ,
+    .result(M_wire_ neg[5]));
+  
+  LogicalORCombinations H6 (
+    .nums({C16, C26, C36, C46, C56}),  
+     .r(n) ,
+    .result(M_wire_ neg[6]));
+  
+  LogicalORCombinations H7 (
+    .nums({C87, C97, C107, C117, C127}),  
+     .r(n) ,
+    .result(M_wire_ neg[7]));
+  
+  LogicalORCombinations H8 (
+    .nums({C78, C98, C108, C118, C128}),  
+     .r(n) ,
+    .result(M_wire_ neg[8]));
+  
+  LogicalORCombinations H9 (
+    .nums({C79, C89, C109, C119, C129}),  
+     .r(n) ,
+    .result(M_wire_ neg[9]));
+  
+  LogicalORCombinations H10 (
+    .nums({C710, C810,C910, C1110, C1210}),  
+     .r(n) ,
+    .result(M_wire_ neg[10]));
+  
+  LogicalORCombinations H11 (
+    .nums({C711, C811,C911, C1011, C1211}),  
+     .r(n) ,
+    .result(M_wire_ neg[11]));
+  
+  LogicalORCombinations H12 (
+    .nums({C712, C812,C912, C1012, C1112}),  
+     .r(n) ,
+    .result(M_wire_ neg[12]));
