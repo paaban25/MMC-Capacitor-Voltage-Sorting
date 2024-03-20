@@ -9,7 +9,7 @@ module LogicalORCombinations_tb;
     reg [2:0] r;
 
     // Outputs
-    wire [SIZE-1:0] result;
+    wire  result;
 
     // Instantiate the module under test
     LogicalORCombinations uut (

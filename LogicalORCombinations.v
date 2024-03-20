@@ -1,7 +1,7 @@
 module LogicalORCombinations (
     input [4:0] nums,
     input [2:0] r,
-    output reg [4:0] result
+    output reg  result
 );
   
     integer i, j;
