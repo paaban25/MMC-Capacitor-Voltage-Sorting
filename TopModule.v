@@ -201,7 +201,18 @@ module TopModule(
     .result(M_wire_neg[12]));
   
   
-  always@* M=I_sign?M_wire_neg:M_wire_pos;
+  always @* begin
+    if (n == 3'b000)
+      M = 12'b000000000000;
+    else if (n == 3'b110)
+      M = 12'b111111111111;
+    else begin
+      if (I_sign)
+        M = M_wire_neg;
+      else
+        M = M_wire_pos;
+    end
+  end
 
   
   
