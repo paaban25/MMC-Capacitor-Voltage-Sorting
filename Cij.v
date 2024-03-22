@@ -1,4 +1,5 @@
-// Code your design here
+`timescale 1ns / 1ps
+
 module Comparator(
   input [31:0] Vi,
   input [31:0] Vj,
@@ -21,26 +22,30 @@ module Comparator(
     Vj_mantissa = Vj[22:0];
     
     if (Vi_exponent > Vj_exponent)
-      Cij_reg = 1'b1;
-    else if (Vi_exponent < Vj_exponent)
       Cij_reg = 1'b0;
+    else if (Vi_exponent < Vj_exponent)
+      Cij_reg = 1'b1;
     else begin
       if (Vi_mantissa > Vj_mantissa)
-        Cij_reg = 1'b1;
-      else if (Vi_mantissa < Vj_mantissa)
         Cij_reg = 1'b0;
+      else if (Vi_mantissa < Vj_mantissa)
+        Cij_reg = 1'b1;
       else
         Cij_reg = 1'b0;
     end
   end
   
   assign Cij = Cij_reg;
-  assign Cji=~Cij;
+  assign Cji=~Cij_reg;
 
 endmodule
 
 
 
+
+
+
+//TestBench
 //TestBench
 // Code your testbench here
 // or browse Examples
@@ -77,15 +82,15 @@ module Comparator_tb;
     Vj = 32'h00000001;  // Vj = 1
     #10;
     
-    Vi = 32'h80000000;  // Vi = -1
-    Vj = 32'h00000001;  // Vj = 1
+    Vi = 32'h41b80000;  // Vi = 23
+    Vj = 32'h3f800000;  // Vj = 1
     #10;
     
     Vi = 32'h41200000;  // Vi = 10.0 (IEEE 754 single precision floating point)
     Vj = 32'h3F800001;  // Vj = 1.00000012 (IEEE 754 single precision floating point)
     #10;
     
-    Vi = 32'hBF800000;  // Vi = -1.0 (IEEE 754 single precision floating point)
+    Vi = 32'h3f800000;  // Vi = 1.0 (IEEE 754 single precision floating point)
     Vj = 32'h3F800001;  // Vj = 1.00000012 (IEEE 754 single precision floating point)
     #10;
     

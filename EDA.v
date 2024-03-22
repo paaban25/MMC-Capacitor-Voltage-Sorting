@@ -1,5 +1,45 @@
 // Code your design here
-`timescale 1ns / 1ns
+`timescale 1ns / 1ps
+
+module Comparator(
+  input [31:0] Vi,
+  input [31:0] Vj,
+  output Cij,
+  output Cji
+);
+
+  reg Vi_sign, Vj_sign;
+  reg [7:0] Vi_exponent, Vj_exponent;
+  reg [22:0] Vi_mantissa, Vj_mantissa;
+  reg Cij_reg;
+
+  always @(*) begin
+    Vi_sign = Vi[31];
+    Vi_exponent = Vi[30:23];
+    Vi_mantissa = Vi[22:0];
+    
+    Vj_sign = Vj[31];
+    Vj_exponent = Vj[30:23];
+    Vj_mantissa = Vj[22:0];
+    
+    if (Vi_exponent > Vj_exponent)
+      Cij_reg = 1'b0;
+    else if (Vi_exponent < Vj_exponent)
+      Cij_reg = 1'b1;
+    else begin
+      if (Vi_mantissa > Vj_mantissa)
+        Cij_reg = 1'b0;
+      else if (Vi_mantissa < Vj_mantissa)
+        Cij_reg = 1'b1;
+      else
+        Cij_reg = 1'b0;
+    end
+  end
+  
+  assign Cij = Cij_reg;
+  assign Cji=~Cij;
+
+endmodule
 
 
 module LogicalORCombinations (
@@ -30,46 +70,6 @@ module LogicalORCombinations (
 endmodule
 
 
-module Comparator(
-  input [31:0] Vi,
-  input [31:0] Vj,
-  output Cij,
-  output Cji
-);
-
-  reg Vi_sign, Vj_sign;
-  reg [7:0] Vi_exponent, Vj_exponent;
-  reg [22:0] Vi_mantissa, Vj_mantissa;
-  reg Cij_reg;
-
-  always @(*) begin
-    Vi_sign = Vi[31];
-    Vi_exponent = Vi[30:23];
-    Vi_mantissa = Vi[22:0];
-    
-    Vj_sign = Vj[31];
-    Vj_exponent = Vj[30:23];
-    Vj_mantissa = Vj[22:0];
-    
-    if (Vi_exponent > Vj_exponent)
-      Cij_reg = 1'b1;
-    else if (Vi_exponent < Vj_exponent)
-      Cij_reg = 1'b0;
-    else begin
-      if (Vi_mantissa > Vj_mantissa)
-        Cij_reg = 1'b1;
-      else if (Vi_mantissa < Vj_mantissa)
-        Cij_reg = 1'b0;
-      else
-        Cij_reg = 1'b0;
-    end
-  end
-  
-  assign Cij = Cij_reg;
-  assign Cji=~Cij;
-
-endmodule
-
 
 module TopModule(
   input [31:0] V1,
@@ -89,8 +89,8 @@ module TopModule(
   output reg [12:1] M
 );
   
-  reg I_sign;
-  initial I_sign= I[31];
+  //reg I_sign;
+  //initial I_sign= I[31];
   
   wire [12:1] M_wire_pos,M_wire_neg;
   
@@ -276,17 +276,96 @@ module TopModule(
   
   always @* begin
     if (n == 3'b000)
-      M = 12'b000000000000;
+      M = 12'b111111000000;
     else if (n == 3'b110)
-      M = 12'b111111111111;
+      M = 12'b000000111111;
     else begin
-      if (I_sign)
-        M = M_wire_neg;
-      else
+      if (I[31]==1'b0)
         M = M_wire_pos;
+      else
+        M = M_wire_neg;
     end
   end
 
   
   
+endmodule
+
+
+
+
+
+
+`timescale 1ns / 1ps
+
+module TopModule_tb;
+
+  // Parameters
+  parameter CLK_PERIOD = 10; // Clock period in ns
+
+  // Signals
+  reg [31:0] V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, I;
+  reg [2:0] n;
+  wire [12:1] M;
+
+  // Instantiate the module under test
+  TopModule dut (
+    .V1(V1), .V2(V2), .V3(V3), .V4(V4), .V5(V5), .V6(V6),
+    .V7(V7), .V8(V8), .V9(V9), .V10(V10), .V11(V11), .V12(V12),
+    .I(I), .n(n), .M(M)
+  );
+
+  // Clock generation
+  reg clk = 0;
+  always #((CLK_PERIOD)/2) clk = ~clk;
+
+  // Test stimulus
+  initial begin
+    // Open VCD file
+    $dumpfile("TopModule_tb.vcd");
+    $dumpvars(0, TopModule_tb); // Dump all signals
+
+    // Initialize inputs
+    V1 = 32'h00000000;  
+    V2 = 32'h00000000;  
+    V3 = 32'h00000000;  
+    V4 = 32'h00000000;  
+    V5 = 32'h00000000;  
+    V6 = 32'h00000000;  
+    V7 = 32'h00000000;  
+    V8 = 32'h00000000;  
+    V9 = 32'h00000000;  
+    V10 = 32'h00000000;  
+    V11 = 32'h00000000;  
+    V12 = 32'h00000000;  
+    I = 32'h00000000;
+    n = 3'b000;
+
+    // Apply stimulus
+    #10;
+    V1 = 32'h41400000;  //12
+    V2 = 32'h00000000;  //0
+    V3 = 32'h41500000;  //13
+    V4 = 32'h41200000;  //10
+    V5 = 32'h40e00000;  //7
+    V6 = 32'h41100000;  //9
+    V7 = 32'h41980000;  //19
+    V8 = 32'h41880000;  //17
+    V9 = 32'h42f00000;  //120
+    V10 = 32'h42140000;  //37
+    V11 = 32'h41c80000;  //25
+    V12 = 32'h41b80000;  //23
+    I = 32'h21b80000;
+    n = 3'b000;
+
+    #20;
+
+    // Add more test cases as needed
+
+    // Display the value of M
+    $display("M = %b", M);
+
+    $stop; // Stop simulation
+  end
+
 endmodule

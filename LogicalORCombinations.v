@@ -28,3 +28,33 @@ module LogicalORCombinations (
     end
 
 endmodule
+
+
+
+//Another possible
+module LogicalORCombinations (
+    input [4:0] nums,
+    input [2:0] r,
+    output reg result
+);
+    reg [2:0] count;
+    integer i;
+
+    always @(*) begin
+        count = 0;
+        for (i = 0; i < 5; i = i + 1) begin
+            if (nums[i] == 1) begin
+                count = count + 1;
+            end
+        end
+    end
+
+    always @(count, r) begin
+        if (count >= r) begin
+            result = 1;
+        end
+        else begin
+            result = 0;
+        end
+    end
+endmodule

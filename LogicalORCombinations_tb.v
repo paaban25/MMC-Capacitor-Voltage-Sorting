@@ -37,3 +37,62 @@ module LogicalORCombinations_tb;
     end
 
 endmodule
+
+
+//For the other possibility
+`timescale 1ns / 1ns
+
+module LogicalORCombinations_tb;
+
+    // Parameters
+    parameter PERIOD = 10; // Simulation time step
+    parameter WIDTH = 5;   // Width of input nums
+    parameter R_WIDTH = 3; // Width of input r
+
+    // Signals
+    reg [WIDTH-1:0] nums;
+    reg [R_WIDTH-1:0] r;
+    wire result;
+
+    // Instantiate the module under test
+    LogicalORCombinations dut (
+        .nums(nums),
+        .r(r),
+        .result(result)
+    );
+
+    // Clock generation
+    reg clk = 0;
+    always #((PERIOD / 2)) clk = ~clk;
+
+    // Stimulus
+    initial begin
+        // Initialize inputs
+        nums = 5'b00000;
+        r = 3'b000;
+        
+        // Test case 1
+        #10 nums = 5'b00001; // 1 '1'
+        #10 r = 3'b000;
+        #10 $display("nums = %b, r = %b, result = %b", nums, r, result); // Should be 0
+        
+        // Test case 2
+        #10 nums = 5'b10101; // 3 '1's
+        #10 r = 3'b010;
+        #10 $display("nums = %b, r = %b, result = %b", nums, r, result); // Should be 1
+        
+        // Test case 3
+        #10 nums = 5'b11011; // 4 '1's
+        #10 r = 3'b011;
+        #10 $display("nums = %b, r = %b, result = %b", nums, r, result); // Should be 1
+        
+        // Test case 4
+        #10 nums = 5'b11111; // 5 '1's
+        #10 r = 3'b111;
+        #10 $display("nums = %b, r = %b, result = %b", nums, r, result); // Should be 1
+        
+        // Finish simulation
+        #10 $finish;
+    end
+
+endmodule
